@@ -7,6 +7,7 @@ import axios from "axios";
 import { parseEther } from "ethers";
 
 const CreateTend = () => {
+
   const [form, setForm] = useState({
     tendertitle: "",
     tenderdescription: "",
@@ -21,57 +22,48 @@ const CreateTend = () => {
   function handleChange(e) {
     const { name, value, files } = e.target;
     setForm({ ...form, [name]: files ? files[0] : value });
+    console.log(form.file);
+    
   }
+
 
   async function handleSubmit(e) {
     e.preventDefault();
-
     try {
-      if (!form.totalamount || isNaN(parseFloat(form.totalamount))) {
-        alert("Total Amount is required and must be a valid number.");
-        return;
-      }
-
-      const totalAmount = parseEther(form.totalamount.toString());
-
-      const openDate = new Date(form.opendate).getTime() / 1000; // Convert to seconds
-      const closeDate = new Date(form.closingdate).getTime() / 1000; // Convert to seconds
-
-      if (openDate >= closeDate) {
-        alert("Closing date must be after the open date.");
-        return;
-      }
 
       const hash = await uploadToPinata(form.file);
       setIpfsHash(hash);
+      console.log(hash);
+      
 
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
       const Abi = ABI.abi;
       const Address = address["EtendModule#Etendering"];
       const contractInstance = new ethers.Contract(Address, Abi, signer);
-
       const txnRcpt = await contractInstance.createTender(
         form.tendertitle,
         form.tenderdescription,
-        Math.floor(openDate),
-        Math.floor(closeDate),
-        { value: totalAmount },
-        hash
+        Math.floor(new Date(form.opendate).getTime() / 1000),
+        Math.floor(new Date(form.closingdate).getTime() / 1000),
+        parseEther(form.totalamount),
+        hash 
       );
 
-      console.log("Transaction Receipt:", txnRcpt);
+      console.log(txnRcpt);
       alert("Tender created successfully!");
     } catch (error) {
       console.error("Error submitting tender:", error);
-      alert("Error creating tender. Check console for details.");
+      alert("Error creating tender. See console for details.");
     }
   }
 
   async function uploadToPinata(file) {
+    console.log("From upload to Pinata:", file);
+  
     const formData = new FormData(); 
     formData.append("file", file);
-
+  
     try {
       const response = await axios({
         method: "post",
@@ -83,31 +75,32 @@ const CreateTend = () => {
           pinata_secret_api_key: "17b095cf4779779622730be6c2bdcad827d043cdc4ad745fc4e40e69128707fa",
         },
       });
+      console.log("File uploaded to Pinata:", response.data.IpfsHash);
       return response.data.IpfsHash;
     } catch (error) {
       console.error("Pinata upload error:", error);
       throw error;
     }
   }
-
+  
 
   return (
     <div>
       <Navbar />
       <form
+        action=""
         className="bg-black mt-8 p-10 mx-auto shadow-lg w-3/4 text-white rounded-lg"
         onSubmit={handleSubmit}
       >
         <div className="grid grid-cols-2 gap-4 mt-8">
           <div className="flex flex-col">
-            <label htmlFor="tendertitle" className="mb-2 font-semibold">
+            <label htmlFor="tender-title" className="mb-2 font-semibold">
               Tender Title:
             </label>
             <input
               id="tendertitle"
               type="text"
               name="tendertitle"
-              value={form.tendertitle}
               placeholder="Enter Tender Title"
               className="p-2 rounded-lg bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
               onChange={handleChange}
@@ -115,14 +108,13 @@ const CreateTend = () => {
           </div>
 
           <div className="flex flex-col">
-            <label htmlFor="tenderdescription" className="mb-2 font-semibold">
+            <label htmlFor="tender-description" className="mb-2 font-semibold">
               Tender Description:
             </label>
             <input
               id="tenderdescription"
               type="text"
               name="tenderdescription"
-              value={form.tenderdescription}
               placeholder="Small Description"
               className="p-2 rounded-lg bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
               onChange={handleChange}
@@ -130,59 +122,57 @@ const CreateTend = () => {
           </div>
 
           <div className="flex flex-col">
-            <label htmlFor="opendate" className="mb-2 font-semibold">
+            <label htmlFor="open-date" className="mb-2 font-semibold">
               Open Date:
             </label>
             <input
               id="opendate"
               type="date"
               name="opendate"
-              value={form.opendate}
               className="p-2 rounded-lg bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
               onChange={handleChange}
             />
           </div>
 
           <div className="flex flex-col">
-            <label htmlFor="closingdate" className="mb-2 font-semibold">
+            <label htmlFor="closing-date" className="mb-2 font-semibold">
               Closing Date:
             </label>
             <input
               id="closingdate"
               type="date"
               name="closingdate"
-              value={form.closingdate}
               className="p-2 rounded-lg bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
               onChange={handleChange}
             />
           </div>
 
           <div className="flex flex-col">
-            <label htmlFor="totalamount" className="mb-2 font-semibold">
+            <label htmlFor="total-amount" className="mb-2 font-semibold">
               Total Amount:
             </label>
             <input
               id="totalamount"
-              type="number"
+              type="text"
               name="totalamount"
-              value={form.totalamount}
-              placeholder="Enter Amount in ETH"
+              placeholder="Enter Amount"
               className="p-2 rounded-lg bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
               onChange={handleChange}
             />
           </div>
 
           <div className="flex flex-col">
-            <label htmlFor="file" className="mb-2 font-semibold">
+            <label htmlFor="tender-documents" className="mb-2 font-semibold">
               Upload Tender Documents:
             </label>
             <input
-              id="file"
+              id="tenderdocuments"
               type="file"
               name="file"
               className="p-2 rounded-lg bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
               onChange={handleChange}
             />
+            <p className="text-sm mt-2 text-gray-400"></p>
           </div>
         </div>
 
