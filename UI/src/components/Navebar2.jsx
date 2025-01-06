@@ -3,6 +3,11 @@ import { Link } from 'react-router-dom';
 import logo from '../../PICS/images-removebg-preview.png';
 
 const Navbar = () => {
+
+  function disconnectmetamask(){
+    
+  }
+
   return (
     <>
       <nav className="bg-black h-16 flex items-center px-6 shadow-md">
@@ -20,7 +25,7 @@ const Navbar = () => {
         </ul>
 
         
-        <button className="ml-6 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200">
+        <button onClick={disconnectmetamask} className="ml-6 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200">
           LOGOUT
         </button>
       </nav>

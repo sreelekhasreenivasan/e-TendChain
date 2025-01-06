@@ -1,85 +1,103 @@
-// SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.28;
+// SPDX-License-Identifier: MIT
 
-contract Etendering {
-    
-    struct Tender {
+pragma solidity ^0.8.20;
+
+contract Etendering{
+
+    struct Tender{
+
         uint id;
         string title;
         string description;
-        uint startDate;
-        uint endDate;
-        uint budget;
+        uint Odate;
+        uint Cdate;
+        uint Amount;
         address owner;
-        bool isClosed;
+        string ipfsHash;
+       
+
     }
 
-    struct Bid {
+    struct Bid{
+
         uint tenderId;
         address bidder;
-        uint amount;
+        uint bidamount;
         uint timestamp;
     }
 
-    uint public tenderCount;
+    uint tenderCount;
+    
+    mapping (uint=>Tender) public tenders;
+    mapping (uint=>Bid[]) public bids;
 
-    mapping(uint => Tender) public tenders;
-    mapping(uint => Bid[]) public bids;
+    modifier check(uint _Odate, uint _Cdate) {
+    require(_Odate < _Cdate, "Check the dates: Opening date must be earlier than closing date");
+    _;
+}
 
-    event TenderCreated(uint id, string title, string description, uint startDate, uint endDate, uint budget, address owner);
-    event BidSubmitted(uint tenderId, address bidder, uint amount);
-    event TenderClosed(uint tenderId, address winner, uint amount);
+    event TenderCreated(uint tenderId, string title, address owner, uint Odate, uint Cdate, uint Amount);
+    event BidSubmitted(uint tenderId, address bidder, uint bidamount, uint timestamp);
+    event TenderClosed(uint tenderId, address winner, uint lowestBid);
 
     function createTender(
-        string memory _title,
-        string memory _description,
-        uint _startDate,
-        uint _endDate,
-        uint _budget
-    ) public {
-        require(_startDate < _endDate, "Start date must be before end date");
+        string memory _title, 
+        string memory _description, 
+        uint _Odate, 
+        uint _Cdate,
+        uint _Amount,
+        string memory _ipfsHash
+        ) public check(_Odate, _Cdate) {
+            tenderCount++;
+            tenders[tenderCount]= Tender(
+                tenderCount,
+                _title,
+                _description,
+                _Odate,
+                _Cdate,
+                _Amount,
+                msg.sender,
+                _ipfsHash);
+                            
+        emit TenderCreated(tenderCount,_title, msg.sender, _Odate, _Cdate, _Amount);
 
-        tenderCount++;
-
-        tenders[tenderCount] = Tender(
-            tenderCount,
-            _title,
-            _description,
-            _startDate,
-            _endDate,
-            _budget,
-            msg.sender,
-            false
-        );
-        emit TenderCreated(tenderCount, _title, _description, _startDate, _endDate, _budget, msg.sender);
-    }
-
-    function submitBid(uint _tenderId, uint _amount) public {
-        Tender memory tender = tenders[_tenderId];
-        require(block.timestamp >= tender.startDate, "Tender is not open yet");
-        require(block.timestamp <= tender.endDate, "Tender is closed");
-        require(_amount <= tender.budget, "Bid exceeds the budget");
-
-        bids[_tenderId].push(Bid(_tenderId, msg.sender, _amount, block.timestamp));
-        emit BidSubmitted(_tenderId, msg.sender, _amount);
-    }
-
-    function closeTender(uint _tenderId) public {
-        Tender storage tender = tenders[_tenderId];
-        require(msg.sender == tender.owner, "Only owner can close the tender");
-        require(!tender.isClosed, "Tender is already closed");
-
-        uint lowestBidAmount = type(uint).max;
-        address winner;
-
-        for (uint i = 0; i < bids[_tenderId].length; i++) {
-            if (bids[_tenderId][i].amount < lowestBidAmount) {
-                lowestBidAmount = bids[_tenderId][i].amount;
-                winner = bids[_tenderId][i].bidder;
-            }
         }
 
-        tender.isClosed = true;
-        emit TenderClosed(_tenderId, winner, lowestBidAmount);
+        function submitBid(uint _tenderId, uint _bidamount)public {
+
+            require(block.timestamp >= tenders[_tenderId].Odate, "Tender has not opened yet");
+
+            bids[_tenderId].push(Bid({
+                tenderId:_tenderId,
+                bidder: msg.sender,
+                bidamount:_bidamount,
+                timestamp:block.timestamp
+            }));
+            
+        emit BidSubmitted(_tenderId, msg.sender, _bidamount, block.timestamp);
+
+        }
+
+    function closeTender(uint _tenderId) public returns (address winner, uint lowestBid) {
+
+    require(tenders[_tenderId].owner == msg.sender, "You are not the Tender Owner");
+    require(block.timestamp > tenders[_tenderId].Cdate, "Tender is still open");
+
+    Bid[] memory tenderBids = bids[_tenderId];
+    uint minBid = type(uint).max;
+    address minBidder;
+
+    for (uint i = 0; i < tenderBids.length; i++) {
+        if (tenderBids[i].bidamount < minBid) {
+            minBid = tenderBids[i].bidamount;
+            minBidder = tenderBids[i].bidder;
+        }
     }
+
+
+    emit TenderClosed(_tenderId, minBidder, minBid);
+
+    return (minBidder, minBid);
+}
+
 }
