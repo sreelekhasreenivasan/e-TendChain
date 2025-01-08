@@ -27,7 +27,7 @@ To run the project locally, follow these steps:
 
 1. Clone the repository:
     bash
-    git clone git@github.com:dinshasivan/Pharma_Track.git
+    git clone git@github.com:sreelekhasreenivasan/e-TendChain.git
     
 2. Navigate to the project directory:
     bash
