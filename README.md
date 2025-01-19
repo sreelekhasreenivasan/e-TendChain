@@ -31,7 +31,7 @@ To run the project locally, follow these steps:
     
 2. Navigate to the project directory:
     bash
-    cd PharmaTrack
+    cd UI
     
 3. Install the dependencies:
     bash
@@ -50,7 +50,7 @@ To interact with the blockchain and deploy the smart contract, follow these step
 
 1. Install Hardhat and the required dependencies:
     bash
-    cd CertifyChain
+    cd HARDHAT
     npm install -D hardhat @nomicfoundation/hardhat-toolbox
     
 
@@ -76,10 +76,6 @@ To interact with the blockchain and deploy the smart contract, follow these step
         },
         sepolia: {
           url: process.env.SEPOLIA_URL,
-          accounts: [process.env.PRIVATE_KEY],
-        },
-        holesky: {
-          url: process.env.HOLSKEY_URL,
           accounts: [process.env.PRIVATE_KEY],
         },
       },
