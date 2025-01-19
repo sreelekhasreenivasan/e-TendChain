@@ -85,6 +85,6 @@ To interact with the blockchain and deploy the smart contract, follow these step
 ---
 
 ### Notes
-- Replace YOUR_ALCHEMY_API_KEY with your actual Alchemy API key for the Holesky network.
+- Create an account in Pinata for IPFS service and replace api key & seceret api key by yours.
 - Ensure the .env file is added to your .gitignore to avoid exposing sensitive information like private keys.
 
