@@ -88,3 +88,8 @@ To interact with the blockchain and deploy the smart contract, follow these step
 - Create an account in Pinata for IPFS service and replace api key & seceret api key by yours.
 - Ensure the .env file is added to your .gitignore to avoid exposing sensitive information like private keys.
 
+## Screenshots
+
+![App Screenshot](https://drive.google.com/file/d/196ktx3pcMGJUadU-GO1K27Fwkoa-epuG/view?usp=sharing)
+
+
