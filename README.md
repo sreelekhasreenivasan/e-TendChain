@@ -1,4 +1,4 @@
-# eTendChain
+# 🚀eTendChain
 
 ### Overview
 *eTendChain* is a e-Tendering System that uses blockchain 
@@ -18,6 +18,10 @@ and allows everyone involved to securely access important information.
 ![](https://img.shields.io/badge/Hardhat-informational?style=flat&logo=Hardhat&color=FF69B4)
 
 ---
+
+# Demo
+
+[https://youtu.be/4c4VHaT90GE](https://youtu.be/4c4VHaT90GE)
 
 ## Getting Started
 
@@ -90,6 +94,7 @@ To interact with the blockchain and deploy the smart contract, follow these step
 
 ## Screenshots
 
-![App Screenshot](https://drive.google.com/file/d/196ktx3pcMGJUadU-GO1K27Fwkoa-epuG/view?usp=sharing)
+![App Screenshot](https://drive.google.com/uc?id=196ktx3pcMGJUadU-GO1K27Fwkoa-epuG)
+
 
 
