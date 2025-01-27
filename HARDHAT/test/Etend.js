@@ -7,22 +7,22 @@ describe('Etendering',function(){
     async function deployContract(){
 
        const [Tender,Bidder1,Bidder2] = await ethers.getSigners();
-       const etend= await ethers.getContractFactory('Etendering');
+       const etend= await ethers.getContractFactory('Etendering'); //load the bytcode and ABI
        const Etender =  await etend.deploy();
         return {Etender, Tender,Bidder1,Bidder2};       
 
     }
 
     it("Able to create tender", async function(){
-        const{Etender,Tender}=await loadFixture(deployContract);
+        const{Etender,Tender}=await loadFixture(deployContract); //dont have to re-deploy in each testing
+        const name="Building Project";
         const Amount=500000;
         const ipfsHash="Qm...hash";
-        await Etender.connect(Tender).createTender("Road Project", "Build a highway", 1704508800, 1707187200, Amount, ipfsHash)
+        await Etender.connect(Tender).createTender(name, "Build a highway", 1704508800, 1707187200, Amount, ipfsHash)
+
         const etend=await Etender.tenders(1);
         // console.log(etend);
-        
-
-        expect(etend.title).to.equal("Road Project");
+        expect(etend.title).to.equal("Building Project");
         expect(etend.description).to.equal("Build a highway");
         expect(etend.Amount).to.equal(Amount);
         expect(etend.owner).to.equal(Tender.address);
@@ -51,7 +51,7 @@ describe('Etendering',function(){
         const{Etender,Tender,Bidder1,Bidder2}=await loadFixture(deployContract);
         const Amount=500000;
         const ipfsHash="Qm...hash";
-await Etender.connect(Tender).createTender("Road Project", "Build a highway", 1704508800, 1707187200,Amount, ipfsHash)
+        await Etender.connect(Tender).createTender("Road Project", "Build a highway", 1704508800, 1707187200,Amount, ipfsHash)
 
         const bidamount1=450000;
         const bidamount2=430000;

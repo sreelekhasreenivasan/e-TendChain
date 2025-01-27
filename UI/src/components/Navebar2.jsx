@@ -1,10 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import logo from '../../PICS/images-removebg-preview.png';
+import { useNavigate } from "react-router-dom"; 
 
 const Navbar = () => {
+  const navigate = useNavigate();
 
   function disconnectmetamask(){
+
+    localStorage.removeItem('signer address');
+    navigate('/')
+
     
   }
 

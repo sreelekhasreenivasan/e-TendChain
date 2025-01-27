@@ -1,8 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useNavigate } from "react-router-dom"; 
 import logo from '../../PICS/images-removebg-preview.png';
 
 const Navbar = () => {
+  const navigate = useNavigate();
+
+  function disconnectmetamask(){
+
+    localStorage.removeItem('signer address');
+    navigate('/')
+
+    
+  }
+
   return (
     <>
       <nav className="bg-black h-16 flex items-center px-6 shadow-md">
@@ -14,12 +25,12 @@ const Navbar = () => {
 
        
         <ul className="flex space-x-6 ml-auto text-white text-sm font-medium">
-          <li className="hover:text-gray-400 cursor-pointer">BID TENDER</li>
-          <li className="hover:text-gray-400 cursor-pointer">TENDER STATUS</li>
+          <li className="hover:text-gray-400 cursor-pointer"><Link to={'/bidtend'}>BID TENDER</Link></li>
+          <li className="hover:text-gray-400 cursor-pointer"><Link to={'/status'}>TENDER STATUS</Link></li>
         </ul>
 
         
-        <button className="ml-6 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200">
+        <button onClick={disconnectmetamask} className="ml-6 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200">
           LOGOUT
         </button>
       </nav>

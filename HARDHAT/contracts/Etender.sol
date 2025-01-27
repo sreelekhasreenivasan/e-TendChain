@@ -14,7 +14,6 @@ contract Etendering{
         uint Amount;
         address owner;
         string ipfsHash;
-       
 
     }
 
@@ -78,13 +77,18 @@ contract Etendering{
 
         }
 
+        
+    function getBids(uint _tenderId) public view returns (Bid[] memory) {
+    return bids[_tenderId];
+}
+
     function closeTender(uint _tenderId) public returns (address winner, uint lowestBid) {
 
     require(tenders[_tenderId].owner == msg.sender, "You are not the Tender Owner");
     require(block.timestamp > tenders[_tenderId].Cdate, "Tender is still open");
 
-    Bid[] memory tenderBids = bids[_tenderId];
-    uint minBid = type(uint).max;
+    Bid[] memory tenderBids = bids[_tenderId]; 
+    uint minBid = type(uint).max; 
     address minBidder;
 
     for (uint i = 0; i < tenderBids.length; i++) {

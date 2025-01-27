@@ -1,12 +1,16 @@
-import React, { useState } from "react";
+import React, { useState} from "react";
 import { ethers } from "ethers";
 import Navbar from "../components/Navebar2";
 import ABI from "../assets/Etendering.json";
 import address from "../assets/deployed_addresses.json";
 import axios from "axios";
 import { parseEther } from "ethers";
+import dotenv from 'dotenv';
+dotenv.config();
+
 
 const CreateTend = () => {
+
 
   const [form, setForm] = useState({
     tendertitle: "",
@@ -35,10 +39,11 @@ const CreateTend = () => {
       setIpfsHash(hash);
       console.log(hash);
       
-
+      
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
-      const Abi = ABI.abi;
+      
+        const Abi = ABI.abi;
       const Address = address["EtendModule#Etendering"];
       const contractInstance = new ethers.Contract(Address, Abi, signer);
       const txnRcpt = await contractInstance.createTender(
@@ -49,9 +54,10 @@ const CreateTend = () => {
         parseEther(form.totalamount),
         hash 
       );
-
       console.log(txnRcpt);
       alert("Tender created successfully!");
+
+    
     } catch (error) {
       console.error("Error submitting tender:", error);
       alert("Error creating tender. See console for details.");
@@ -59,7 +65,7 @@ const CreateTend = () => {
   }
 
   async function uploadToPinata(file) {
-    console.log("From upload to Pinata:", file);
+    // console.log("From upload to Pinata:", file);
   
     const formData = new FormData(); 
     formData.append("file", file);
@@ -71,15 +77,14 @@ const CreateTend = () => {
         data: formData, 
         headers: {
           "Content-Type": "multipart/form-data",
-          pinata_api_key: "e1e44cd23fa01e223320", 
-          pinata_secret_api_key: "17b095cf4779779622730be6c2bdcad827d043cdc4ad745fc4e40e69128707fa",
+          pinata_api_key: process.env.VITE_PINATA_API_KEY, 
+          pinata_secret_api_key: process.env.VITE_PINATA_API_SECRET,
         },
       });
       console.log("File uploaded to Pinata:", response.data.IpfsHash);
       return response.data.IpfsHash;
     } catch (error) {
       console.error("Pinata upload error:", error);
-      throw error;
     }
   }
   

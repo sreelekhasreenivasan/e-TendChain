@@ -5,6 +5,8 @@ import CreateTend from './pages/CreateTend';
 import Bidtend from './pages/Bidtend';
 import Evaluate from './pages/Evaluate';
 import Winner from './pages/Winner';
+import Status from './pages/Status';
+import Footer from './components/Footer';
 
 const App = () => {
   return (
@@ -17,8 +19,10 @@ const App = () => {
           <Route path='/bidtend' element={<Bidtend/>}/>
           <Route path='/evaluate' element={<Evaluate/>}/>
           <Route path='/winner' element={<Winner/>}/>
+          <Route path='/status' element={<Status/>}/>
         </Routes>
       </Router>
+      <Footer/>
 
     </div>
   )

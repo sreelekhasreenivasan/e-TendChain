@@ -12,7 +12,6 @@ const Navbar = () => {
     const address=signer.address;
     console.log(address);
     alert(`${address} Tender Publisher successfully logged in `)
-    // localStorage.setItem('signer address',address);
   }
 
   async function connectToMetamaskasBidder(){
@@ -21,7 +20,6 @@ const Navbar = () => {
     const address=signer.address;
     console.log(address);
     alert(`${address} Bidder successfully logged in `)
-    // localStorage.setItem('signer address',address);
   }
 
   return (
@@ -46,7 +44,7 @@ const Navbar = () => {
         </button>
 
       </nav>
-      <div className="text-white font-bold w-2/4 h-82 ml-44 text-2xl mt-32  p-6 rounded-lg shadow-2xl  hover:shadow-2xl transition-shadow duration-300">
+      <div className="text-white font-bold w-2/4 h-82 ml-44 text-4xl mt-44  p-6 rounded-lg shadow-2xl  hover:shadow-2xl transition-shadow duration-300">
   Revolutionizing procurement, a seamless, transparent, and efficient way to manage bids online
   -<br></br>saving time, ensuring fairness, and driving smarter decisions.
 </div>
